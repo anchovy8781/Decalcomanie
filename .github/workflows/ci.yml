@@ -1,0 +1,181 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: "3.24.3"
+
+jobs:
+  # ─── Analyze & Test ──────────────────────────────────────────────────────────
+  analyze-and-test:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: pub-${{ runner.os }}-${{ hashFiles('pubspec.yaml') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed lib/
+
+      - name: Analyze
+        run: flutter analyze --fatal-infos
+
+      - name: Run tests
+        run: flutter test --coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/lcov.info
+          retention-days: 7
+
+  # ─── Build Android APK ───────────────────────────────────────────────────────
+  build-android:
+    name: Build Android (debug)
+    runs-on: ubuntu-latest
+    needs: analyze-and-test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: pub-${{ runner.os }}-${{ hashFiles('pubspec.yaml') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('android/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Write placeholder Firebase config
+        # The real google-services.json must be added as a repository secret
+        # for release builds. The placeholder keeps the CI build green.
+        run: |
+          if [ -z "${{ secrets.GOOGLE_SERVICES_JSON }}" ]; then
+            cp .github/ci/google-services.placeholder.json \
+               android/app/google-services.json
+          else
+            echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d \
+              > android/app/google-services.json
+          fi
+
+      - name: Write placeholder Firebase options
+        run: |
+          if [ ! -f lib/firebase_options.dart ]; then
+            cp .github/ci/firebase_options.placeholder.dart \
+               lib/firebase_options.dart
+          fi
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build debug APK
+        run: flutter build apk --debug --no-shrink
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk-${{ github.run_number }}
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 14
+
+  # ─── Build iOS (compile check only, no signing) ──────────────────────────────
+  build-ios:
+    name: Build iOS (no-codesign)
+    runs-on: macos-latest
+    needs: analyze-and-test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            .dart_tool
+          key: pub-${{ runner.os }}-${{ hashFiles('pubspec.yaml') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Write placeholder Firebase options
+        run: |
+          if [ ! -f lib/firebase_options.dart ]; then
+            cp .github/ci/firebase_options.placeholder.dart \
+               lib/firebase_options.dart
+          fi
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Install CocoaPods
+        run: |
+          cd ios
+          pod install --repo-update
+
+      - name: Build iOS (no codesign)
+        run: flutter build ios --debug --no-codesign
