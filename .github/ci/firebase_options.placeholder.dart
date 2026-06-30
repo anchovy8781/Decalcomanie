@@ -11,10 +11,8 @@ class DefaultFirebaseOptions {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
-      case TargetPlatform.iOS:
-        return ios;
       default:
-        throw UnsupportedError('Unsupported platform.');
+        throw UnsupportedError('Android only.');
     }
   }
 
@@ -24,15 +22,5 @@ class DefaultFirebaseOptions {
     messagingSenderId: '000000000000',
     projectId: 'mirrortube-placeholder',
     storageBucket: 'mirrortube-placeholder.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'CI-PLACEHOLDER',
-    appId: '1:000000000000:ios:0000000000000000000000',
-    messagingSenderId: '000000000000',
-    projectId: 'mirrortube-placeholder',
-    storageBucket: 'mirrortube-placeholder.appspot.com',
-    iosClientId: 'CI-PLACEHOLDER',
-    iosBundleId: 'com.mirrortube.app',
   );
 }

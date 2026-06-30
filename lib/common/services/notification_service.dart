@@ -8,7 +8,7 @@ class NotificationService {
   final FirebaseMessaging _messaging;
 
   Future<void> initialize() async {
-    // Request permission (required on iOS; no-op on Android >= 13 handled by manifest)
+    // Triggers the POST_NOTIFICATIONS runtime prompt on Android 13+ (API 33+).
     final settings = await _messaging.requestPermission();
 
     if (settings.authorizationStatus == AuthorizationStatus.denied) {
@@ -39,6 +39,8 @@ class NotificationService {
 
   void _onForegroundMessage(RemoteMessage message) {
     // In a real implementation, show an in-app notification banner
-    debugPrint('NotificationService: Foreground message received: ${message.messageId}');
+    debugPrint(
+      'NotificationService: Foreground message received: ${message.messageId}',
+    );
   }
 }

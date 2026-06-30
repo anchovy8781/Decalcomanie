@@ -19,11 +19,10 @@ class DefaultFirebaseOptions {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
-      case TargetPlatform.iOS:
-        return ios;
       default:
         throw UnsupportedError(
-          'DefaultFirebaseOptions are not supported for this platform.',
+          'This app supports Android only. '
+          'Platform $defaultTargetPlatform is not supported.',
         );
     }
   }
@@ -35,15 +34,5 @@ class DefaultFirebaseOptions {
     messagingSenderId: 'REPLACE_WITH_SENDER_ID',
     projectId: 'REPLACE_WITH_PROJECT_ID',
     storageBucket: 'REPLACE_WITH_STORAGE_BUCKET',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'REPLACE_WITH_IOS_API_KEY',
-    appId: 'REPLACE_WITH_IOS_APP_ID',
-    messagingSenderId: 'REPLACE_WITH_SENDER_ID',
-    projectId: 'REPLACE_WITH_PROJECT_ID',
-    storageBucket: 'REPLACE_WITH_STORAGE_BUCKET',
-    iosClientId: 'REPLACE_WITH_IOS_CLIENT_ID',
-    iosBundleId: 'com.mirrortube.app',
   );
 }
