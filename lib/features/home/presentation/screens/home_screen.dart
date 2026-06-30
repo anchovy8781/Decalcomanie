@@ -120,15 +120,17 @@ class _VideoCardPlaceholder extends StatelessWidget {
         // Thumbnail placeholder
         AspectRatio(
           aspectRatio: 16 / 9,
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              Icons.play_circle_outline_rounded,
-              size: 48,
-              color: colorScheme.onSurfaceVariant.withOpacity(0.4),
+            child: Center(
+              child: Icon(
+                Icons.play_circle_outline_rounded,
+                size: 48,
+                color: colorScheme.onSurfaceVariant.withOpacity(0.4),
+              ),
             ),
           ),
         ),

@@ -37,10 +37,10 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const Divider(),
           const _SectionHeader(title: '정보'),
-          ListTile(
-            leading: const Icon(Icons.info_outline_rounded),
-            title: const Text(AppStrings.appVersion),
-            trailing: const Text('1.0.0', style: TextStyle(color: Colors.grey)),
+          const ListTile(
+            leading: Icon(Icons.info_outline_rounded),
+            title: Text(AppStrings.appVersion),
+            trailing: Text('1.0.0', style: TextStyle(color: Colors.grey)),
           ),
           ListTile(
             leading: const Icon(Icons.privacy_tip_outlined),

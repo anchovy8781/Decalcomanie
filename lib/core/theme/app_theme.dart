@@ -6,7 +6,6 @@ abstract final class AppTheme {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: AppColors.primary,
-          brightness: Brightness.light,
           error: AppColors.error,
         ),
         scaffoldBackgroundColor: AppColors.surfaceLight,
@@ -49,7 +48,7 @@ abstract final class AppTheme {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: AppColors.dividerLight),
+            borderSide: const BorderSide(color: AppColors.dividerLight),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -95,7 +94,7 @@ abstract final class AppTheme {
           color: AppColors.dividerLight,
           thickness: 1,
         ),
-        cardTheme: CardThemeData(
+        cardTheme: CardTheme(
           color: AppColors.surfaceLight,
           elevation: 0,
           shape: RoundedRectangleBorder(
@@ -152,7 +151,7 @@ abstract final class AppTheme {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: AppColors.dividerDark),
+            borderSide: const BorderSide(color: AppColors.dividerDark),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -198,7 +197,7 @@ abstract final class AppTheme {
           color: AppColors.dividerDark,
           thickness: 1,
         ),
-        cardTheme: CardThemeData(
+        cardTheme: CardTheme(
           color: AppColors.surfaceVariantDark,
           elevation: 0,
           shape: RoundedRectangleBorder(

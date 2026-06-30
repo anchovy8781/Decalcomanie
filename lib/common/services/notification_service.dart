@@ -9,11 +9,7 @@ class NotificationService {
 
   Future<void> initialize() async {
     // Request permission (required on iOS; no-op on Android >= 13 handled by manifest)
-    final settings = await _messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    final settings = await _messaging.requestPermission();
 
     if (settings.authorizationStatus == AuthorizationStatus.denied) {
       debugPrint('NotificationService: Permission denied.');

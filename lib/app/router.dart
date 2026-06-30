@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -56,17 +55,27 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
         branches: [
           StatefulShellBranch(
-            routes: [GoRoute(path: '/', builder: (_, __) => const HomeScreen())],
+            routes: [
+              GoRoute(
+                path: '/',
+                builder: (_, __) => const HomeScreen(),
+              ),
+            ],
           ),
           StatefulShellBranch(
-            routes: [GoRoute(path: '/search', builder: (_, __) => const SearchScreen())],
+            routes: [
+              GoRoute(
+                path: '/search',
+                builder: (_, __) => const SearchScreen(),
+              ),
+            ],
           ),
           StatefulShellBranch(
             routes: [
               GoRoute(
                 path: '/upload',
                 builder: (_, __) => const UploadPlaceholderScreen(),
-              )
+              ),
             ],
           ),
           StatefulShellBranch(
@@ -74,7 +83,7 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/notifications',
                 builder: (_, __) => const NotificationScreen(),
-              )
+              ),
             ],
           ),
           StatefulShellBranch(
@@ -82,7 +91,7 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/profile',
                 builder: (_, __) => const ProfileScreen(),
-              )
+              ),
             ],
           ),
         ],

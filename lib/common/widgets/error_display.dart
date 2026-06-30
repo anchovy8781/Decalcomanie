@@ -21,7 +21,11 @@ class ErrorDisplay extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.error_outline_rounded, size: 64, color: colorScheme.error),
+            Icon(
+              Icons.error_outline_rounded,
+              size: 64,
+              color: colorScheme.error,
+            ),
             const SizedBox(height: 16),
             Text(
               message ?? AppStrings.unknownError,

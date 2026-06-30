@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../common/models/result.dart';
+import '../../../authentication/presentation/providers/auth_provider.dart';
 import '../../data/repositories/profile_repository_impl.dart';
 import '../../data/sources/firestore_profile_source.dart';
 import '../../domain/entities/profile_entity.dart';
 import '../../domain/repositories/profile_repository.dart';
-import '../../../authentication/presentation/providers/auth_provider.dart';
 
 // ─── Repository ───────────────────────────────────────────────────────────────
 

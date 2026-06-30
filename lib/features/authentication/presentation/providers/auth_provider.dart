@@ -1,14 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../../common/models/result.dart';
 import '../../../../common/services/analytics_service.dart';
+import '../../../profile/data/sources/firestore_profile_source.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/sources/firebase_auth_source.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../../../profile/data/sources/firestore_profile_source.dart';
 
 // ─── Infrastructure providers ─────────────────────────────────────────────────
 

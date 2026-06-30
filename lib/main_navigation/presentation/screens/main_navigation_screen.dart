@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_strings.dart';
-import '../../../features/home/presentation/screens/home_screen.dart';
-import '../../../features/notification/presentation/screens/notification_screen.dart';
-import '../../../features/profile/presentation/screens/profile_screen.dart';
-import '../../../features/search/presentation/screens/search_screen.dart';
-import '../../../features/upload/presentation/screens/upload_placeholder_screen.dart';
 
 class MainNavigationScreen extends StatelessWidget {
   const MainNavigationScreen({

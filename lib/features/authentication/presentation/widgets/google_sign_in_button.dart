@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_strings.dart';
 
 class GoogleSignInButton extends StatelessWidget {
-  const GoogleSignInButton({super.key, required this.onPressed, this.isLoading = false});
+  const GoogleSignInButton({
+    super.key,
+    required this.onPressed,
+    this.isLoading = false,
+  });
 
   final VoidCallback onPressed;
   final bool isLoading;
