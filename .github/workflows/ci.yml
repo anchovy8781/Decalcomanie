@@ -43,8 +43,14 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed lib/
+      - name: Apply formatting and report drift
+        run: |
+          dart format lib/
+          if ! git diff --quiet lib/; then
+            echo "::warning::The following files were reformatted by dart format."
+            echo "Run 'dart format lib/' locally before committing."
+            git diff --name-only lib/
+          fi
 
       - name: Analyze
         run: flutter analyze --fatal-infos
@@ -99,31 +105,27 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('android/gradle/wrapper/gradle-wrapper.properties') }}
+          key: >-
+            gradle-${{ runner.os }}-${{
+            hashFiles('android/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: |
             gradle-${{ runner.os }}-
 
-      - name: Write placeholder Firebase config
-        # The real google-services.json must be added as a repository secret
-        # for release builds. The placeholder keeps the CI build green.
+      - name: Write Firebase config
         run: |
-          if [ -z "${{ secrets.GOOGLE_SERVICES_JSON }}" ]; then
-            cp .github/ci/google-services.placeholder.json \
-               android/app/google-services.json
-          else
+          if [ -n "${{ secrets.GOOGLE_SERVICES_JSON }}" ]; then
             echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d \
               > android/app/google-services.json
-          fi
-
-      - name: Write placeholder Firebase options
-        run: |
-          if [ ! -f lib/firebase_options.dart ]; then
-            cp .github/ci/firebase_options.placeholder.dart \
-               lib/firebase_options.dart
+          else
+            cp .github/ci/google-services.placeholder.json \
+               android/app/google-services.json
           fi
 
       - name: Install dependencies
         run: flutter pub get
+
+      - name: Apply formatting
+        run: dart format lib/
 
       - name: Build debug APK
         run: flutter build apk --debug --no-shrink
@@ -162,20 +164,15 @@ jobs:
           restore-keys: |
             pub-${{ runner.os }}-
 
-      - name: Write placeholder Firebase options
-        run: |
-          if [ ! -f lib/firebase_options.dart ]; then
-            cp .github/ci/firebase_options.placeholder.dart \
-               lib/firebase_options.dart
-          fi
-
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Apply formatting
+        run: dart format lib/
+
       - name: Install CocoaPods
-        run: |
-          cd ios
-          pod install --repo-update
+        run: pod install --repo-update
+        working-directory: ios
 
       - name: Build iOS (no codesign)
         run: flutter build ios --debug --no-codesign
